@@ -1,0 +1,68 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
+android {
+
+    def global = rootProject.extensions.getByName("ext")
+
+    compileSdkVersion global["androidSdkCompileVersion"]
+    buildToolsVersion global["androidBuildToolsVersion"]
+
+    defaultConfig {
+        applicationId "com.thiago.bankapp"
+        minSdkVersion global["androidMinSdkVersion"]
+        targetSdkVersion global["androidTargetSdkVersion"]
+        versionCode global["androidVersionCode"]
+        versionName global["androidVersionName"]
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    dataBinding {
+        enabled = true
+    }
+}
+
+dependencies {
+
+    def appDependencies = rootProject.ext.appModule
+
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation appDependencies.kotlin
+    implementation appDependencies.appCompat
+    implementation appDependencies.coreKtx
+    implementation appDependencies.constaintlayout
+
+    // Coroutines
+    implementation appDependencies.coroutineCore
+    implementation appDependencies.coroutineAndroid
+
+    implementation project(':data')
+    implementation project(':remote')
+
+    //Retrofit
+    implementation appDependencies.gson
+    implementation appDependencies.retrofit
+    implementation appDependencies.retrofitConverterGson
+
+    // Navigation
+    implementation appDependencies.navigationFragment
+    implementation appDependencies.navigationUi
+
+    //LiveData and ViewModel
+    implementation appDependencies.liveData
+    implementation appDependencies.liveDataLifecycle
+
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+}

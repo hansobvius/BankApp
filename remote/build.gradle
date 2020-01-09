@@ -1,0 +1,55 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+android {
+
+    def global = rootProject.extensions.getByName("ext")
+
+    compileSdkVersion global["androidSdkCompileVersion"]
+    buildToolsVersion global["androidBuildToolsVersion"]
+
+    defaultConfig {
+        minSdkVersion global["androidMinSdkVersion"]
+        targetSdkVersion global["androidTargetSdkVersion"]
+        versionCode global["androidVersionCode"]
+        versionName global["androidVersionName"]
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+}
+
+dependencies {
+
+    def remoteDependencies = rootProject.ext.remoteModule
+    def remoteTestDependencies = rootProject.ext.remoteModuleTest
+
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation remoteDependencies.kotlin
+    implementation remoteDependencies.appCompat
+    implementation remoteDependencies.coreKtx
+
+    //Retrofit
+    implementation remoteDependencies.gson
+    implementation remoteDependencies.retrofit
+    implementation remoteDependencies.retrofitConverterGson
+
+    // Coroutines
+    implementation remoteDependencies.coroutineCore
+    implementation remoteDependencies.coroutineAndroid
+    implementation remoteDependencies.corouotineAdapter
+
+    //OkHttp
+    implementation remoteDependencies.okHttp
+    implementation remoteDependencies.okHttpLogger
+
+    testImplementation remoteTestDependencies.junit
+    androidTestImplementation remoteTestDependencies.junitest
+}
